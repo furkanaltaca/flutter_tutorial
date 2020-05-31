@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_tutorial/models/Student.dart';
+import 'package:flutter_tutorial/screens/student_add.dart';
 
 void main() => runApp(MyApp());
 
@@ -9,9 +10,9 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      debugShowCheckedModeBanner: false,
-      theme: ThemeData.dark()
-          .copyWith(scaffoldBackgroundColor: myAppBackgroundColor),
+      // debugShowCheckedModeBanner: false,
+      // theme: ThemeData.dark()
+      //     .copyWith(scaffoldBackgroundColor: myAppBackgroundColor),
       home: HomeScreen(),
     );
   }
@@ -19,7 +20,7 @@ class MyApp extends StatelessWidget {
 
 class HomeScreen extends StatefulWidget {
   @override
-  _HomeScreenState createState() => _HomeScreenState();
+  State<StatefulWidget> createState() => _HomeScreenState();
 }
 
 class _HomeScreenState extends State<HomeScreen> {
@@ -27,7 +28,7 @@ class _HomeScreenState extends State<HomeScreen> {
     Student.withId(911, "Furkan", "Altaca", 100),
     Student.withId(911, "Mehmet Hazar", "Ertürk", 49),
     Student.withId(911, "Mehmet", "Aksu", 39),
-    Student.withId(911, "Kasım", "Şahin", 50),
+    Student.withId(911, "Kasım", "Şahin", 50)
   ];
 
   Student selectedStudent = Student.withId(0, "Hiç Kimse", "", 0);
@@ -36,7 +37,7 @@ class _HomeScreenState extends State<HomeScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
         appBar: AppBar(title: Text("Öğrenci Takip Sistemi")),
-        body: buildBody());
+        body: Container(margin: EdgeInsets.all(10), child: buildBody()));
   }
 
   Widget buildBody() {
@@ -55,7 +56,7 @@ class _HomeScreenState extends State<HomeScreen> {
                   trailing: buildStatusIcon(studentList[i].grade),
                   onTap: () {
                     setState(() {
-                      selectedStudent=studentList[i];
+                      selectedStudent = studentList[i];
                     });
                   },
                   onLongPress: () {
@@ -64,7 +65,14 @@ class _HomeScreenState extends State<HomeScreen> {
                 );
               }),
         ),
-        Text("Seçili öğe ${selectedStudent.firstName}")
+        Text("Seçili öğe ${selectedStudent.firstName}"),
+        Row(
+          children: <Widget>[
+            buildAddStudentButoton(),
+            buildUpdateStudentButton(),
+            buildDeleteStudentButton()
+          ],
+        )
       ],
     );
   }
@@ -77,5 +85,61 @@ class _HomeScreenState extends State<HomeScreen> {
     } else {
       return Icon(Icons.clear);
     }
+  }
+
+  Widget buildAddStudentButoton() {
+    return Flexible(
+      fit: FlexFit.tight,
+      flex: 3,
+      child: RaisedButton(
+          color: Colors.greenAccent,
+          child: Row(
+            children: <Widget>[
+              Icon(Icons.add_circle_outline),
+              SizedBox(width: 3.0),
+              Text("Yeni")
+            ],
+          ),
+          onPressed: () {
+            Navigator.push(
+                context,
+                MaterialPageRoute(
+                    builder: (context) => StudentAdd(studentList))).then((value) => setState((){}));
+          }),
+    );
+  }
+
+  Widget buildUpdateStudentButton() {
+    return Flexible(
+      fit: FlexFit.tight,
+      flex: 3,
+      child: RaisedButton(
+          color: Colors.black26,
+          child: Row(
+            children: <Widget>[
+              Icon(Icons.update),
+              SizedBox(width: 3.0),
+              Text("Güncelle")
+            ],
+          ),
+          onPressed: () {}),
+    );
+  }
+
+  Widget buildDeleteStudentButton() {
+    return Flexible(
+      fit: FlexFit.tight,
+      flex: 3,
+      child: RaisedButton(
+          color: Colors.yellowAccent,
+          child: Row(
+            children: <Widget>[
+              Icon(Icons.delete_outline),
+              SizedBox(width: 3.0),
+              Text("Sil")
+            ],
+          ),
+          onPressed: () {}),
+    );
   }
 }
