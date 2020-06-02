@@ -31,8 +31,6 @@ class _HomeScreenState extends State<HomeScreen> {
     Student.withId(345, "Kasım", "Şahin", 50)
   ];
 
-  // Student selectedStudent = Student.withId(null, "Hiç Kimse", "", 0);
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -94,25 +92,10 @@ class _HomeScreenState extends State<HomeScreen> {
                                       studentList, studentList[i])))
                           .then((value) => setState(() {}));
                     },
-                    // onLongPress: () {
-                    //   print("Uzun basıldı");
-                    // },
                   ),
                 );
-
-                // return ;
               }),
         ),
-        // Row(
-        //   mainAxisSize: MainAxisSize.max,
-        //   mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-        //   crossAxisAlignment: CrossAxisAlignment.center,
-        //   children: <Widget>[
-        //     // buildAddStudentButoton(),
-        //     // buildUpdateStudentButton(),
-        //     // buildDeleteStudentButton()
-        //   ],
-        // )
       ],
     );
   }
@@ -127,79 +110,5 @@ class _HomeScreenState extends State<HomeScreen> {
     }
   }
 
-  // Widget buildAddStudentButoton() {
-  //   return RaisedButton(
-  //     color: Colors.greenAccent,
-  //     child: Row(
-  //       children: <Widget>[
-  //         Icon(Icons.add_circle_outline),
-  //         SizedBox(width: 3.0),
-  //         Text("Yeni")
-  //       ],
-  //     ),
-  //     onPressed: () {
-  //       Navigator.push(
-  //               context,
-  //               MaterialPageRoute(
-  //                   builder: (context) => StudentAdd(studentList)))
-  //           .then((value) => setState(() {}));
-  //     },
-  //   );
-  // }
-
-  // Widget buildUpdateStudentButton() {
-  //   return RaisedButton(
-  //     color: Colors.black12,
-  //     child: Row(
-  //       children: <Widget>[
-  //         Icon(Icons.update),
-  //         SizedBox(width: 3.0),
-  //         Text("Güncelle")
-  //       ],
-  //     ),
-  //     onPressed: () {
-  //       if (selectedStudent.id != null) {
-  //         Navigator.push(
-  //                 context,
-  //                 MaterialPageRoute(
-  //                     builder: (context) =>
-  //                         StudentAdd.forUpdate(studentList, selectedStudent)))
-  //             .then((value) => setState(() {}));
-  //       } else {
-  //         var alert = AlertDialog(
-  //           title: Text("Uyarı"),
-  //           content: Text("Listeden öğrenci seçiniz."),
-  //           actions: <Widget>[
-  //             FlatButton(
-  //               child: Text("Tamam"),
-  //               onPressed: () {
-  //                 Navigator.of(context).pop();
-  //               },
-  //             )
-  //           ],
-  //         );
-  //         showDialog(
-  //           context: context,
-  //           builder: (_) => alert,
-  //           barrierDismissible: true,
-  //         );
-  //       }
-  //     },
-  //   );
-  // }
-
-  // Widget buildDeleteStudentButton() {
-  //   return RaisedButton(
-  //     color: Colors.redAccent,
-  //     child: Row(
-  //       children: <Widget>[
-  //         Icon(Icons.delete_outline),
-  //         SizedBox(width: 3.0),
-  //         Text("Sil")
-  //       ],
-  //     ),
-  //     onPressed: () {},
-  //   );
-  // }
   
 }
