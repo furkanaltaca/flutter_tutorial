@@ -89,18 +89,17 @@ class StudentAddState extends State<StudentAdd> {
           if (widget.isUpdateMode) {
             formKey.currentState.save();
             newStudent.id = widget.student.id;
-            var stdnt = widget.students
+            var updatedStudent = widget.students
                 .where((element) => element.id == newStudent.id)
                 .first;
-            stdnt.firstName = newStudent.firstName;
-            stdnt.lastName = newStudent.lastName;
-            stdnt.grade = newStudent.grade;
-
-            Navigator.pop(context);
+            updatedStudent.firstName = newStudent.firstName;
+            updatedStudent.lastName= newStudent.lastName;
+            updatedStudent.grade = newStudent.grade;
+            Navigator.pop<Student>(context, updatedStudent);
           } else {
             formKey.currentState.save();
             widget.students.add(newStudent);
-            Navigator.pop(context);
+            Navigator.pop<Student>(context, newStudent);
           }
         },
       ),

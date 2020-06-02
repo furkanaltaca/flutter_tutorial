@@ -31,27 +31,36 @@ class _HomeScreenState extends State<HomeScreen> {
     Student.withId(345, "Kasım", "Şahin", 50)
   ];
 
+  final GlobalKey<ScaffoldState> scaffoldKey = GlobalKey<ScaffoldState>();
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        appBar: AppBar(
-          title: Text("Öğrenciler"),
-          centerTitle: true,
-          actions: <Widget>[
-            IconButton(
-              icon: Icon(Icons.add),
-              tooltip: "Yeni öğrenci ekle",
-              onPressed: () {
-                Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                            builder: (context) => StudentAdd(studentList)))
-                    .then((value) => setState(() {}));
-              },
-            )
-          ],
-        ),
-        body: Container(margin: EdgeInsets.all(10), child: buildBody()));
+      key: scaffoldKey,
+      appBar: AppBar(
+        title: Text("Öğrenciler"),
+        centerTitle: true,
+        actions: <Widget>[
+          IconButton(
+            icon: Icon(Icons.add),
+            tooltip: "Yeni öğrenci ekle",
+            onPressed: () {
+              Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                          builder: (context) => StudentAdd(studentList)))
+                  .then((value) {
+                setState(() {});
+                var student = value as Student;
+                buildSnackBar(
+                    "${student.firstName.toString()} ${student.lastName.toString()} eklendi.");
+              });
+            },
+          )
+        ],
+      ),
+      body: Container(margin: EdgeInsets.only(top: 10), child: buildBody()),
+    );
   }
 
   Widget buildBody() {
@@ -61,36 +70,38 @@ class _HomeScreenState extends State<HomeScreen> {
           child: ListView.builder(
               itemCount: studentList.length,
               itemBuilder: (BuildContext context, int i) {
-                final item = studentList[i].firstName;
+                final student = studentList[i];
                 return Dismissible(
-                  key: Key(item),
+                  key: Key(student.firstName),
+                  direction: DismissDirection.startToEnd,
                   onDismissed: (direction) {
                     setState(() {
                       studentList.removeAt(i);
                     });
-                    Scaffold.of(context).showSnackBar(SnackBar(
-                        content:
-                            Text("${studentList[i].firstName} dismissed")));
+                    buildSnackBar(
+                        "${student.firstName} ${student.lastName} silindi.");
                   },
                   background: Container(
-                      color: Colors.red,
+                      color: Colors.redAccent,
                       alignment: Alignment.centerLeft,
                       child: Icon(Icons.delete)),
                   child: ListTile(
-                    title: Text(studentList[i].firstName +
-                        " " +
-                        studentList[i].lastName),
+                    title: Text("${student.firstName} ${student.lastName}"),
                     subtitle: Text(
-                        "Sınavdan aldığı not: ${studentList[i].grade.toString()}\n[${studentList[i].getStatus}]"),
+                        "Sınav Notu: ${student.grade.toString()}\n[${student.getStatus}]"),
                     leading: CircleAvatar(child: Icon(Icons.person_outline)),
-                    trailing: buildStatusIcon(studentList[i].grade),
+                    trailing: buildStatusIcon(student.grade),
                     onTap: () {
                       Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                  builder: (context) => StudentAdd.forUpdate(
-                                      studentList, studentList[i])))
-                          .then((value) => setState(() {}));
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) => StudentAdd.forUpdate(
+                                  studentList, studentList[i]))).then((value) {
+                        setState(() {});
+                        var student = value as Student;
+                        buildSnackBar(
+                            "${student.firstName.toString()} ${student.lastName.toString()} güncellendi.");
+                      });
                     },
                   ),
                 );
@@ -110,5 +121,8 @@ class _HomeScreenState extends State<HomeScreen> {
     }
   }
 
-  
+  buildSnackBar(String text) {
+    scaffoldKey.currentState.removeCurrentSnackBar();
+    scaffoldKey.currentState.showSnackBar(SnackBar(content: Text(text)));
+  }
 }
