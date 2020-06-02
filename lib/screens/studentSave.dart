@@ -1,25 +1,25 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_tutorial/models/Student.dart';
 
-class StudentAdd extends StatefulWidget {
+class StudentSave extends StatefulWidget {
   List<Student> students;
   Student student;
   bool isUpdateMode = false;
 
-  StudentAdd(this.students);
-  StudentAdd.forUpdate(this.students, this.student) {
+  StudentSave(this.students);
+  StudentSave.forUpdate(this.students, this.student) {
     isUpdateMode = true;
   }
 
   @override
   State<StatefulWidget> createState() {
-    return StudentAddState();
+    return StudentSaveState();
   }
 }
 
-class StudentAddState extends State<StudentAdd> {
+class StudentSaveState extends State<StudentSave> {
   var formKey = GlobalKey<FormState>();
-  var newStudent = Student("", "", 0);
+  var newStudent = Student.withId(null,"", "", 0);
 
   @override
   Widget build(BuildContext context) {
