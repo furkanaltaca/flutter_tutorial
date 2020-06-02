@@ -2,9 +2,14 @@ import 'package:flutter/material.dart';
 import 'package:flutter_tutorial/models/Student.dart';
 
 class StudentAdd extends StatefulWidget {
-  final List<Student> students;
+  List<Student> students;
+  Student student;
+  bool isUpdateMode = false;
 
   StudentAdd(this.students);
+  StudentAdd.forUpdate(this.students, this.student) {
+    isUpdateMode = true;
+  }
 
   @override
   State<StatefulWidget> createState() {
@@ -14,12 +19,13 @@ class StudentAdd extends StatefulWidget {
 
 class StudentAddState extends State<StudentAdd> {
   var formKey = GlobalKey<FormState>();
-  var student = Student("", "", 0);
+  var newStudent = Student("", "", 0);
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: Text("Yeni Öğrenci")),
+      appBar: AppBar(
+          title: Text(widget.isUpdateMode ? "Güncelle" : "Yeni Öğrenci")),
       body: Container(
         margin: EdgeInsets.all(20),
         child: Form(
@@ -39,31 +45,33 @@ class StudentAddState extends State<StudentAdd> {
 
   Widget buildFirstNameField() {
     return TextFormField(
-      initialValue: "ad",
-      decoration: InputDecoration(labelText: "Öğrenci Adı", hintText: "Furkan"),
+      initialValue: widget.isUpdateMode ? widget.student.firstName : "",
+      decoration: InputDecoration(
+        labelText: "Öğrenci Adı",
+      ),
       onSaved: (String value) {
-        student.firstName = value;
+        newStudent.firstName = value;
       },
     );
   }
 
   Widget buildLastNameField() {
     return TextFormField(
-      initialValue: "soyad",
-      decoration:
-          InputDecoration(labelText: "Öğrenci Soyadı", hintText: "Altaca"),
+      initialValue: widget.isUpdateMode ? widget.student.lastName : "",
+      decoration: InputDecoration(labelText: "Öğrenci Soyadı"),
       onSaved: (String value) {
-        student.lastName = value;
+        newStudent.lastName = value;
       },
     );
   }
 
   Widget buildGradeField() {
     return TextFormField(
-      initialValue: "67",
-      decoration: InputDecoration(labelText: "Aldığı Not", hintText: "65"),
+      initialValue: widget.isUpdateMode ? widget.student.grade.toString() : "",
+      decoration: InputDecoration(labelText: "Aldığı Not"),
+      keyboardType: TextInputType.number,
       onSaved: (String value) {
-        student.grade = int.parse(value);
+        newStudent.grade = int.parse(value);
       },
     );
   }
@@ -78,9 +86,22 @@ class StudentAddState extends State<StudentAdd> {
         ),
         color: Colors.yellow,
         onPressed: () {
-          formKey.currentState.save();
-          widget.students.add(student);
-          Navigator.pop(context);
+          if (widget.isUpdateMode) {
+            formKey.currentState.save();
+            newStudent.id = widget.student.id;
+            var stdnt = widget.students
+                .where((element) => element.id == newStudent.id)
+                .first;
+            stdnt.firstName = newStudent.firstName;
+            stdnt.lastName = newStudent.lastName;
+            stdnt.grade = newStudent.grade;
+
+            Navigator.pop(context);
+          } else {
+            formKey.currentState.save();
+            widget.students.add(newStudent);
+            Navigator.pop(context);
+          }
         },
       ),
     );
