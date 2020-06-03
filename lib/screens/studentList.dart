@@ -15,7 +15,7 @@ class _StudentListState extends State<StudentList> {
     Student.withId(345, "Kasım", "Şahin", 50)
   ];
 
-  final GlobalKey<ScaffoldState> scaffoldKey = GlobalKey<ScaffoldState>();
+  var _scaffoldKey = GlobalKey<ScaffoldState>();
 
   @override
   void setState(fn) {
@@ -28,7 +28,7 @@ class _StudentListState extends State<StudentList> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      key: scaffoldKey,
+      key: _scaffoldKey,
       appBar: AppBar(
         title: Text("Öğrenciler"),
         centerTitle: true,
@@ -66,6 +66,10 @@ class _StudentListState extends State<StudentList> {
                 return Dismissible(
                   key: Key(student.firstName),
                   direction: DismissDirection.startToEnd,
+                  background: Container(
+                      color: Colors.redAccent,
+                      alignment: Alignment.centerLeft,
+                      child: Icon(Icons.delete)),
                   onDismissed: (direction) {
                     var deletedStudent;
                     setState(() {
@@ -77,10 +81,6 @@ class _StudentListState extends State<StudentList> {
                         item: deletedStudent,
                         index: i);
                   },
-                  background: Container(
-                      color: Colors.redAccent,
-                      alignment: Alignment.centerLeft,
-                      child: Icon(Icons.delete)),
                   child: ListTile(
                     title: Text("${student.firstName} ${student.lastName}"),
                     subtitle: Text(
@@ -119,8 +119,8 @@ class _StudentListState extends State<StudentList> {
 
   buildSnackBar(String text,
       {bool isUndoButton = false, Object item, int index}) {
-    scaffoldKey.currentState.removeCurrentSnackBar();
-    scaffoldKey.currentState.showSnackBar(SnackBar(
+    _scaffoldKey.currentState.removeCurrentSnackBar();
+    _scaffoldKey.currentState.showSnackBar(SnackBar(
         content: Text(text),
         action: isUndoButton
             ? SnackBarAction(

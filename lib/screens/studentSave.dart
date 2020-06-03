@@ -18,18 +18,20 @@ class StudentSave extends StatefulWidget {
 }
 
 class StudentSaveState extends State<StudentSave> {
-  var formKey = GlobalKey<FormState>();
-  var newStudent = Student.withId(null,"", "", 0);
+  var _scaffoldKey = GlobalKey<ScaffoldState>();
+  var _formKey = GlobalKey<FormState>();
+  var newStudent = Student.withId(null, "", "", 0);
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      key: _scaffoldKey,
       appBar: AppBar(
           title: Text(widget.isUpdateMode ? "Güncelle" : "Yeni Öğrenci")),
       body: Container(
         margin: EdgeInsets.all(20),
         child: Form(
-          key: formKey,
+          key: _formKey,
           child: Column(
             children: <Widget>[
               buildFirstNameField(),
@@ -46,9 +48,13 @@ class StudentSaveState extends State<StudentSave> {
   Widget buildFirstNameField() {
     return TextFormField(
       initialValue: widget.isUpdateMode ? widget.student.firstName : "",
-      decoration: InputDecoration(
-        labelText: "Öğrenci Adı",
-      ),
+      validator: (value) {
+        if (value.isEmpty) {
+          return 'Öğrencinin adını giriniz.';
+        }
+        return null;
+      },
+      decoration: InputDecoration(labelText: "Öğrencinin Adı"),
       onSaved: (String value) {
         newStudent.firstName = value;
       },
@@ -58,7 +64,13 @@ class StudentSaveState extends State<StudentSave> {
   Widget buildLastNameField() {
     return TextFormField(
       initialValue: widget.isUpdateMode ? widget.student.lastName : "",
-      decoration: InputDecoration(labelText: "Öğrenci Soyadı"),
+      validator: (value) {
+        if (value.isEmpty) {
+          return 'Öğrencinin soyadını giriniz.';
+        }
+        return null;
+      },
+      decoration: InputDecoration(labelText: "Öğrencinin Soyadı"),
       onSaved: (String value) {
         newStudent.lastName = value;
       },
@@ -68,6 +80,12 @@ class StudentSaveState extends State<StudentSave> {
   Widget buildGradeField() {
     return TextFormField(
       initialValue: widget.isUpdateMode ? widget.student.grade.toString() : "",
+      validator: (value) {
+        if (value.isEmpty) {
+          return 'Öğrencinin aldığı notu giriniz.';
+        }
+        return null;
+      },
       decoration: InputDecoration(labelText: "Aldığı Not"),
       keyboardType: TextInputType.number,
       onSaved: (String value) {
@@ -86,20 +104,25 @@ class StudentSaveState extends State<StudentSave> {
         ),
         color: Colors.yellow,
         onPressed: () {
-          if (widget.isUpdateMode) {
-            formKey.currentState.save();
-            newStudent.id = widget.student.id;
-            var updatedStudent = widget.students
-                .where((element) => element.id == newStudent.id)
-                .first;
-            updatedStudent.firstName = newStudent.firstName;
-            updatedStudent.lastName= newStudent.lastName;
-            updatedStudent.grade = newStudent.grade;
-            Navigator.pop<Student>(context, updatedStudent);
+          if (!_formKey.currentState.validate()) {
+            _scaffoldKey.currentState.showSnackBar(SnackBar(
+              content: Text("Tüm bilgileri doldurunuz."),
+            ));
           } else {
-            formKey.currentState.save();
-            widget.students.add(newStudent);
-            Navigator.pop<Student>(context, newStudent);
+            _formKey.currentState.save();
+            if (widget.isUpdateMode) {
+              newStudent.id = widget.student.id;
+              var updatedStudent = widget.students
+                  .where((element) => element.id == newStudent.id)
+                  .first;
+              updatedStudent.firstName = newStudent.firstName;
+              updatedStudent.lastName = newStudent.lastName;
+              updatedStudent.grade = newStudent.grade;
+              Navigator.pop<Student>(context, updatedStudent);
+            } else {
+              widget.students.add(newStudent);
+              Navigator.pop<Student>(context, newStudent);
+            }
           }
         },
       ),
