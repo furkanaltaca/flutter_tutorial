@@ -19,8 +19,10 @@ class _StudentListState extends State<StudentList> {
 
   @override
   void setState(fn) {
-    // getStudentList(filter);
-    super.setState(fn);
+    super.setState(() {
+      fn();
+      // getStudentList(filter);
+    });
   }
 
   @override
