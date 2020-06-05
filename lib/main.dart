@@ -10,7 +10,7 @@ class MyApp extends StatelessWidget {
       debugShowCheckedModeBanner: false,
       theme: ThemeData.light()
           .copyWith(scaffoldBackgroundColor: Colors.white),
-      home: StudentList(),
+      home: StudentList()
     );
   }
 }

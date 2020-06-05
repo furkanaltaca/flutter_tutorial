@@ -28,30 +28,41 @@ class _StudentListState extends State<StudentList> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      // drawer: Drawer(
+      //   child: ListView(
+      //     children: [
+      //       DrawerHeader(child: Text("Drawer Header"),),
+      //       ListTile(title: Text("Tile 1"),onTap: (){
+      //         Navigator.push(context,MaterialPageRoute(builder: (context)=>StudentSave(studentList)));
+      //       },),
+      //       ListTile(title: Text("Tile 1"),),
+      //       ListTile(title: Text("Tile 1"),),
+      //       ListTile(title: Text("Tile 1"),),
+      //       ListTile(title: Text("Tile 1"),),
+      //     ],
+      //   ),
+      // ),
       key: _scaffoldKey,
       appBar: AppBar(
         title: Text("Öğrenciler"),
-        centerTitle: true,
-        actions: <Widget>[
-          IconButton(
-            icon: Icon(Icons.add),
-            tooltip: "Yeni öğrenci ekle",
-            onPressed: () {
-              Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                          builder: (context) => StudentSave(studentList)))
-                  .then((value) {
-                setState(() {});
-                var student = value as Student;
-                buildSnackBar(
-                    "${student.firstName.toString()} ${student.lastName.toString()} eklendi.");
-              });
-            },
-          )
-        ],
       ),
-      body: Container(margin: EdgeInsets.only(top: 10), child: buildBody()),
+      body: Container(child: buildBody()),
+      floatingActionButton: FloatingActionButton(
+        child: Icon(Icons.add),
+        tooltip: "Yeni öğrenci ekle",
+        onPressed: () {
+          Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                      builder: (context) => StudentSave(studentList)))
+              .then((value) {
+            setState(() {});
+            var student = value as Student;
+            buildSnackBar(
+                "${student.firstName.toString()} ${student.lastName.toString()} eklendi.");
+          });
+        },
+      ),
     );
   }
 
