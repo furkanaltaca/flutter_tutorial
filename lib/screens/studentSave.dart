@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_tutorial/models/Student.dart';
 
 class StudentSave extends StatefulWidget {
@@ -81,13 +82,21 @@ class StudentSaveState extends State<StudentSave> {
     return TextFormField(
       initialValue: widget.isUpdateMode ? widget.student.grade.toString() : "",
       validator: (value) {
-        if (value.isEmpty) {
+        if (value.isEmpty)
           return 'Öğrencinin aldığı notu giriniz.';
+        else {
+          int val = int.parse(value);
+          if ((val < 0 || val > 100)) 
+            return "Not 0-100 aralığında olmalıdır.";
         }
         return null;
       },
       decoration: InputDecoration(labelText: "Aldığı Not"),
       keyboardType: TextInputType.number,
+      inputFormatters: [
+        WhitelistingTextInputFormatter.digitsOnly,
+        LengthLimitingTextInputFormatter(3)
+      ],
       onSaved: (String value) {
         newStudent.grade = int.parse(value);
       },
@@ -106,7 +115,7 @@ class StudentSaveState extends State<StudentSave> {
         onPressed: () {
           if (!_formKey.currentState.validate()) {
             _scaffoldKey.currentState.showSnackBar(SnackBar(
-              content: Text("Tüm bilgileri doldurunuz."),
+              content: Text("Girdiğiniz bilgileri kontrol ediniz."),
             ));
           } else {
             _formKey.currentState.save();

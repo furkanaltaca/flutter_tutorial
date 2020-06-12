@@ -80,7 +80,7 @@ class _StudentListState extends State<StudentList> {
                   background: Container(
                       color: Colors.redAccent,
                       alignment: Alignment.centerLeft,
-                      child: Icon(Icons.delete)),
+                      child: Icon(Icons.delete_outline,color: Colors.white,)),
                   onDismissed: (direction) {
                     var deletedStudent;
                     setState(() {
@@ -120,11 +120,11 @@ class _StudentListState extends State<StudentList> {
 
   Widget buildStatusIcon(int grade) {
     if (grade >= 50) {
-      return Icon(Icons.done);
+      return Icon(Icons.check_circle_outline);
     } else if (grade > 40) {
-      return Icon(Icons.album);
+      return Icon(Icons.adjust);
     } else {
-      return Icon(Icons.clear);
+      return Icon(Icons.remove_circle_outline);
     }
   }
 
